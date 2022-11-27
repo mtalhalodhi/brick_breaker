@@ -1,0 +1,73 @@
+[gd_scene load_steps=10 format=3 uid="uid://exkr7agoypu4"]
+
+[ext_resource type="PackedScene" uid="uid://uhmufmdrumeq" path="res://nodes/bricks/Brick.tscn" id="1_kngei"]
+[ext_resource type="Script" path="res://scenes/LevelManager.cs" id="1_wt7ug"]
+[ext_resource type="PackedScene" uid="uid://qh8tel7fnboy" path="res://nodes/bricks/BrickLongHorizontal.tscn" id="2_qbb5e"]
+[ext_resource type="PackedScene" uid="uid://gpjro8pj2qwp" path="res://nodes/Ball.tscn" id="4_s1em5"]
+[ext_resource type="PackedScene" uid="uid://dujdrvpa0j16g" path="res://nodes/Paddle.tscn" id="5_i0lck"]
+
+[sub_resource type="TileSetScenesCollectionSource" id="TileSetScenesCollectionSource_d6jpb"]
+scenes/1/scene = ExtResource("1_kngei")
+scenes/2/scene = ExtResource("2_qbb5e")
+
+[sub_resource type="TileSet" id="TileSet_5i4qw"]
+sources/0 = SubResource("TileSetScenesCollectionSource_d6jpb")
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8q35t"]
+size = Vector2(20, 364)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_oyue3"]
+size = Vector2(20, 576)
+
+[node name="Main" type="Node2D" node_paths=PackedStringArray("tilemap", "ball")]
+script = ExtResource("1_wt7ug")
+tilemap = NodePath("TileMap")
+ball = NodePath("Ball")
+Lives = 3
+
+[node name="TileMap" type="TileMap" parent="."]
+tile_set = SubResource("TileSet_5i4qw")
+format = 2
+layer_0/tile_data = PackedInt32Array(-262154, 0, 65536, -196618, 0, 65536, -131082, 0, 65536, -262153, 0, 65536, -196617, 0, 65536, -131081, 0, 65536, -196616, 0, 65536, -131080, 0, 65536, -196615, 0, 65536, -262150, 0, 65536, -196614, 0, 65536, -262149, 0, 65536, -196613, 0, 65536, -262148, 0, 65536, -196612, 0, 65536, -131076, 0, 65536, -262147, 0, 65536, -196611, 0, 65536, -131075, 0, 65536, -262146, 0, 65536, -131074, 0, 65536, -262145, 0, 65536, -327680, 0, 65536, -327679, 0, 65536, -196607, 0, 65536, -327678, 0, 65536, -262142, 0, 65536, -196606, 0, 65536, -327677, 0, 65536, -262141, 0, 65536, -196605, 0, 65536, -327676, 0, 65536, -262140, 0, 65536, -196604, 0, 65536, -327675, 0, 65536, -196603, 0, 65536, -327674, 0, 65536, -196602, 0, 65536, -327673, 0, 65536, -262137, 0, 65536, -196601, 0, 65536, -262136, 0, 65536, -196600, 0, 65536, -262135, 0, 65536, -196599, 0, 65536, -131077, 0, 65536, -262152, 0, 131072, -131079, 0, 131072, -131073, 0, 131072, -196610, 0, 131072, -262144, 0, 131072, -262139, 0, 131072, -327672, 0, 131072, -65546, 0, 131072, -65544, 0, 131072, -65542, 0, 131072, -65540, 0, 131072, -65538, 0, 131072, -131072, 0, 131072, -131070, 0, 131072, -131068, 0, 131072, -131066, 0, 131072, -131064, 0, 131072)
+
+[node name="Camera2D" type="Camera2D" parent="."]
+current = true
+zoom = Vector2(3, 3)
+
+[node name="Walls" type="Node2D" parent="."]
+
+[node name="WallLeft" type="StaticBody2D" parent="Walls" groups=["walls"]]
+position = Vector2(-202, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallLeft"]
+shape = SubResource("RectangleShape2D_8q35t")
+
+[node name="WallRight" type="StaticBody2D" parent="Walls" groups=["walls"]]
+position = Vector2(202, 0)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/WallRight"]
+shape = SubResource("RectangleShape2D_8q35t")
+
+[node name="Roof" type="StaticBody2D" parent="Walls" groups=["walls"]]
+position = Vector2(0, -118)
+rotation = 1.57079
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Roof"]
+shape = SubResource("RectangleShape2D_oyue3")
+
+[node name="Floor" type="StaticBody2D" parent="Walls" groups=["floor"]]
+position = Vector2(0, 118)
+rotation = 1.57079
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Walls/Floor"]
+shape = SubResource("RectangleShape2D_oyue3")
+
+[node name="Paddle" parent="." instance=ExtResource("5_i0lck")]
+position = Vector2(0, 99)
+
+[node name="Launcher" type="Marker2D" parent="Paddle"]
+position = Vector2(0, -9)
+
+[node name="Ball" parent="." node_paths=PackedStringArray("Launcher") instance=ExtResource("4_s1em5")]
+position = Vector2(0, 90)
+Launcher = NodePath("../Paddle/Launcher")
